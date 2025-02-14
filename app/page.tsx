@@ -14,13 +14,13 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     try {
-      const email = emailOption === "custom" ? customEmail : "your-email@example.com"; // Handle custom email logic here
+      const email = customEmail
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, altEmail: email === 'me' ? undefined:email }), // Sending email along with the title
+        body: JSON.stringify({ title, altEmail: email === '' ? undefined:email }), // Sending email along with the title
       });
 
       if (response.ok) {
