@@ -1,4 +1,4 @@
-# Next.js Project with OpenAI SDK & Pica OS SDK
+# Get book summarized with a key takeaway from the book in your inbox built with OpenAI SDK & Pica OS SDK
 
 This is a Next.js project that integrates with the OpenAI SDK and the Pica OS SDK to provide advanced AI capabilities. In this project, the OpenAI SDK is used to interact with OpenAI's API, and the Pica OS SDK allows integration with the Pica OS platform.
 
