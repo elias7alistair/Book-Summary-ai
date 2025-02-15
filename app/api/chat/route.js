@@ -1,11 +1,13 @@
+//TODO: format email for better readability. Error handling in case prompt fails.
+
 import { openai } from "@ai-sdk/openai";
 import { convertToCoreMessages, streamText } from "ai";
 import { Pica } from "@picahq/ai";
 
 export async function POST(request) {
   try {
-    const { title,altEmail } = await request.json(); // Parse the incoming request JSON to get the book title and email
- let email = altEmail || 'alistair.fernandes@ajackus.com'
+    const { title, altEmail } = await request.json(); // Parse the incoming request JSON to get the book title and email
+    let email = altEmail || "alistair.fernandes@ajackus.com";
     const pica = new Pica(process.env.PICA_SECRET_KEY); // Initialize Pica with the secret key
 
     // Generate the system prompt using Pica
@@ -19,8 +21,7 @@ export async function POST(request) {
       messages: convertToCoreMessages([
         {
           role: "user",
-//content: `send an email to ${email} with the subject '${title} Book Summary' and the body as short one line summary of ${title} . userid for mail should be 'me' .do not ask for confirmation send the mail straight away`,
-content: `send an email to ${email} with the subject '${title} Book Summary' and the body as short one line summary and one key take away of ${title} . userId for email should be 'me' . do not ask for confirmation send the mail straight away`,
+          content: `send an email to ${email} with the subject '${title} Book Summary' and the body as short one line summary and one key take away of ${title} . userId for email should be 'me' . do not ask for confirmation send the mail straight away`,
         },
       ]),
       maxSteps: 10,

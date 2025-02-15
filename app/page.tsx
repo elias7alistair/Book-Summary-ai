@@ -14,13 +14,16 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     try {
-      const email = customEmail
+      const email = customEmail;
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, altEmail: email === '' ? undefined:email }), // Sending email along with the title
+        body: JSON.stringify({
+          title,
+          altEmail: email === "" ? undefined : email,
+        }), // Sending email along with the title
       });
 
       if (response.ok) {
@@ -42,7 +45,9 @@ export default function Home() {
           <div className="flex justify-center mb-6">
             <BookOpenText className="h-16 w-16 text-primary" />
           </div>
-          <h1 className="text-4xl font-bold mb-4 text-primary">Book Summary Generator</h1>
+          <h1 className="text-4xl font-bold mb-4 text-primary">
+            Book Summary Generator
+          </h1>
           <p className="text-muted-foreground text-lg">
             Get instant book summaries delivered to your inbox
           </p>
@@ -51,7 +56,10 @@ export default function Home() {
         <div className="bg-card rounded-xl shadow-lg p-8 backdrop-blur-sm bg-opacity-50">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="title" className="text-sm font-medium text-foreground">
+              <label
+                htmlFor="title"
+                className="text-sm font-medium text-foreground"
+              >
                 Book Title
               </label>
               <div className="relative">
@@ -70,7 +78,10 @@ export default function Home() {
 
             {/* Dropdown for email selection */}
             <div className="space-y-2">
-              <label htmlFor="emailOption" className="text-sm font-medium text-foreground">
+              <label
+                htmlFor="emailOption"
+                className="text-sm font-medium text-foreground"
+              >
                 Send Summary To
               </label>
               <select
@@ -87,7 +98,10 @@ export default function Home() {
             {/* Custom email input */}
             {emailOption === "custom" && (
               <div className="space-y-2">
-                <label htmlFor="customEmail" className="text-sm font-medium text-foreground">
+                <label
+                  htmlFor="customEmail"
+                  className="text-sm font-medium text-foreground"
+                >
                   Custom Email Address
                 </label>
                 <input
@@ -106,14 +120,18 @@ export default function Home() {
               type="submit"
               disabled={loading || !title}
               className={`w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-lg bg-primary text-primary-foreground font-medium transition-all
-                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90'}
-                ${success ? 'bg-green-600' : ''}`}
+                ${
+                  loading ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"
+                }
+                ${success ? "bg-green-600" : ""}`}
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
               ) : success ? (
                 <>
-                  <span>Summary of the book will be sent on your mail shortly!</span>
+                  <span>
+                    Summary of the book will be sent on your mail shortly!
+                  </span>
                   <Sparkles className="h-5 w-5" />
                 </>
               ) : (
@@ -126,9 +144,11 @@ export default function Home() {
           </form>
 
           <div className="mt-8 pt-6 border-t border-border">
-            <h2 className="text-lg font-semibold mb-4 text-foreground">How it works</h2>
+            <h2 className="text-lg font-semibold mb-4 text-foreground">
+              How it works
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[ 
+              {[
                 {
                   icon: <BookOpenText className="h-6 w-6" />,
                   title: "Enter Title",
@@ -137,12 +157,14 @@ export default function Home() {
                 {
                   icon: <Sparkles className="h-6 w-6" />,
                   title: "AI Processing",
-                  description: "Our AI generates a concise summary and key takeaways",
+                  description:
+                    "Our AI generates a concise summary and key takeaways",
                 },
                 {
                   icon: <Send className="h-6 w-6" />,
                   title: "Instant Delivery",
-                  description: "Receive the summary directly in your email inbox",
+                  description:
+                    "Receive the summary directly in your email inbox",
                 },
               ].map((step, index) => (
                 <div key={index} className="text-center">
@@ -150,7 +172,9 @@ export default function Home() {
                     {step.icon}
                   </div>
                   <h3 className="font-medium mb-2">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground">{step.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {step.description}
+                  </p>
                 </div>
               ))}
             </div>
