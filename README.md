@@ -26,6 +26,6 @@ Once you have your API keys, you can store them securely in the `.env.local` fil
 
    ```bash
    git clone https://github.com/yourusername/nextjs-openai-picaos.git
-
+ ```bash
 npm i
 npm run dev
