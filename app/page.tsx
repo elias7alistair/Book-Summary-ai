@@ -1,101 +1,162 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { BookOpenText, Send, Sparkles } from "lucide-react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [title, setTitle] = useState("");
+  const [emailOption, setEmailOption] = useState("me"); // 'me' or 'custom'
+  const [customEmail, setCustomEmail] = useState(""); // custom email input
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const email = customEmail
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, altEmail: email === '' ? undefined:email }), // Sending email along with the title
+      });
+
+      if (response.ok) {
+        setSuccess(true);
+        setTitle("");
+        setCustomEmail(""); // Clear custom email field
+        setTimeout(() => setSuccess(false), 3000);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-background to-secondary">
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <BookOpenText className="h-16 w-16 text-primary" />
+          </div>
+          <h1 className="text-4xl font-bold mb-4 text-primary">Book Summary Generator</h1>
+          <p className="text-muted-foreground text-lg">
+            Get instant book summaries delivered to your inbox
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        <div className="bg-card rounded-xl shadow-lg p-8 backdrop-blur-sm bg-opacity-50">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label htmlFor="title" className="text-sm font-medium text-foreground">
+                Book Title
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-background border border-input focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                  placeholder="Enter the book title..."
+                  required
+                />
+                <Sparkles className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+              </div>
+            </div>
+
+            {/* Dropdown for email selection */}
+            <div className="space-y-2">
+              <label htmlFor="emailOption" className="text-sm font-medium text-foreground">
+                Send Summary To
+              </label>
+              <select
+                id="emailOption"
+                value={emailOption}
+                onChange={(e) => setEmailOption(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-background border border-input focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+              >
+                <option value="me">Send to my email</option>
+                <option value="custom">Send to custom email</option>
+              </select>
+            </div>
+
+            {/* Custom email input */}
+            {emailOption === "custom" && (
+              <div className="space-y-2">
+                <label htmlFor="customEmail" className="text-sm font-medium text-foreground">
+                  Custom Email Address
+                </label>
+                <input
+                  type="email"
+                  id="customEmail"
+                  value={customEmail}
+                  onChange={(e) => setCustomEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-background border border-input focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                  placeholder="Enter custom email..."
+                  required={emailOption === "custom"}
+                />
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || !title}
+              className={`w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-lg bg-primary text-primary-foreground font-medium transition-all
+                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90'}
+                ${success ? 'bg-green-600' : ''}`}
+            >
+              {loading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+              ) : success ? (
+                <>
+                  <span>Summary of the book will be sent on your mail shortly!</span>
+                  <Sparkles className="h-5 w-5" />
+                </>
+              ) : (
+                <>
+                  <span>Generate Summary</span>
+                  <Send className="h-5 w-5" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-8 pt-6 border-t border-border">
+            <h2 className="text-lg font-semibold mb-4 text-foreground">How it works</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[ 
+                {
+                  icon: <BookOpenText className="h-6 w-6" />,
+                  title: "Enter Title",
+                  description: "Input the name of any book you want summarized",
+                },
+                {
+                  icon: <Sparkles className="h-6 w-6" />,
+                  title: "AI Processing",
+                  description: "Our AI generates a concise summary and key takeaways",
+                },
+                {
+                  icon: <Send className="h-6 w-6" />,
+                  title: "Instant Delivery",
+                  description: "Receive the summary directly in your email inbox",
+                },
+              ].map((step, index) => (
+                <div key={index} className="text-center">
+                  <div className="flex justify-center mb-3 text-primary">
+                    {step.icon}
+                  </div>
+                  <h3 className="font-medium mb-2">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground">{step.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
