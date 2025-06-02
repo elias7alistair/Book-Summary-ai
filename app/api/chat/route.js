@@ -8,7 +8,10 @@ export async function POST(request) {
   try {
     const { title, altEmail } = await request.json(); // Parse the incoming request JSON to get the book title and email
     let email = altEmail || "alistair.fernandes@ajackus.com";
-    const pica = new Pica(process.env.PICA_SECRET_KEY); // Initialize Pica with the secret key
+    const pica = new Pica(process.env.PICA_SECRET_KEY , {
+      serverUrl: process.env.ENVIRONMENT === "DEVELOPMENT" ? "https://development-api.picaos.com" : "https://api.picaos.com",
+      connectors:["*"]
+  });
 
     // Generate the system prompt using Pica
     const systemPrompt = await pica.generateSystemPrompt();
@@ -21,10 +24,10 @@ export async function POST(request) {
       messages: convertToCoreMessages([
         {
           role: "user",
-          content: `send an email to ${email} with the subject '${title} Book Summary' and the body as short one line summary and one key take away of ${title} . userId for email should be 'me' . do not ask for confirmation send the mail straight away`,
+          content: `send an email to ${email} with the subject '${title} Book Summary' and brief summary of each chapter with practical actionable steps or where it can be use in real life scenario as the body and Three key take away of ${title} . userId for email should be 'me' . do not ask for confirmation send the mail straight away. Ensure to format it well with a good UI no need For the name or any email formality like best regards. Also save it as a doc on google docs with title as 'Summary of ${title}' and then update the doc with same content as email in the doc content with Batch Update Document action and ensure to format it as per google docs`,
         },
       ]),
-      maxSteps: 10,
+      maxSteps: 50,
     });
 
     // Return the response as a streaming data response
